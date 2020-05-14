@@ -1,0 +1,23 @@
+<aura:component description="MatchCandidateToPosition" implements="flexipage:availableForAllPageTypes"
+                access="global" controller="CandidateToPositionApexController">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="positionSelected" type="c:PositionSelectedEvent"/>
+    <aura:registerEvent name="refreshNewInterview" type="c:refreshInterviewAppEvent"/>
+
+    <aura:attribute name="candidate" type="Candidate__c"/>
+    <aura:attribute name="data" type="Position__c[]"/>
+    <aura:attribute name="columns" type="List"/>
+
+    <div style="max-height: 300px" class="slds-is-relative">
+        <lightning:datatable keyField="id"
+                             columns="{!v.columns}"
+                             data="{!v.data}"
+                             onrowaction="{!c.handleRowAction}"
+                             showRowNumberColumn="false"
+                             hideCheckboxColumn="true"/>
+
+        <lightning:spinner aura:id="spinner" variant="brand" size="large" alternativeText="Please wait"/>
+    </div>
+
+</aura:component>

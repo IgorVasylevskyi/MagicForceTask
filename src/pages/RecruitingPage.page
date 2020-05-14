@@ -1,0 +1,21 @@
+<apex:page id="RecruitingPage">
+
+    <apex:includeScript value="/lightning/lightning.out.js"/>
+    <!--<apex:includeScript value="magic-force-recruiting-developer-edition.eu29.force.com/lightning/lightning.out.js"/>-->
+
+    <script>
+        $Lightning.use("c:RecruitingApp", function () {
+            $Lightning.createComponent(
+                "c:RecruitingMain",
+                {},
+                "recruiting",
+                function (cmp) {
+                    console.log("Component created!");
+                    console.log(cmp);
+                });
+        });
+    </script>
+
+    <div id="recruiting"></div>
+
+</apex:page>

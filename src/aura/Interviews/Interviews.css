@@ -1,0 +1,29 @@
+.THIS .slds-grid--align-space{
+    /*height: 100px;*/
+    padding-bottom: 30px;
+    margin-left: 15px;
+    margin-top: -20px;
+}
+.THIS .table{
+    /*height: 280px;*/
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.THIS .time{
+    background-color: white;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+.THIS .passed {
+    padding-top: 25px;
+    padding-bottom: 15px;
+}
+.THIS .result {
+    margin-left: 30px;
+    margin-bottom: 15px;
+}
+.THIS .textarea {
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-bottom: 30px;
+}

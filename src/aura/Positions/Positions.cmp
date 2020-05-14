@@ -1,0 +1,55 @@
+<aura:component description="Positions" implements="flexipage:availableForAllPageTypes" access="global"
+                controller="PositionsApexController">
+
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="filteredPositions" type="Position__c[]"/>
+    <aura:attribute name="englishPicklist" type="String[]" default="[]"/>
+    <aura:attribute name="qualificationPicklist" type="String[]" default="[]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--For refreshing Tab-->
+    <aura:registerEvent name="refreshPositions" type="c:refreshPositionsEvent"/>
+    <aura:handler name="refreshPositions" event="c:refreshPositionsEvent" action="{!c.doInit}"/>
+
+
+    <lightning:card class="card">
+
+        <lightning:layout class="slds-grid--align-space">
+
+            <span onkeypress="{!c.runNameFilter}" style="padding-bottom: 10px; padding-top: 5px">
+                <lightning:input aura:id="name" label="" placeholder="Search this list..."
+                                 type="search" onchange="{!c.nameIsEmpty}"/>
+            </span>
+
+            <div class="picklists">
+                <lightning:combobox aura:id="english" label="English level:"
+                                    options="{!v.englishPicklist}" onchange="{!c.allFilters}"/>
+
+            </div>
+            <div class="picklists">
+                <lightning:combobox aura:id="qualification" label="Qualification:"
+                                    options="{!v.qualificationPicklist}" onchange="{!c.allFilters}"/>
+
+            </div>
+
+            <div class="slds-border_left"></div>
+            <lightning:input aura:id="dateFrom" label="Date From:" type="date" onchange="{!c.dateFilter}"/>
+            <lightning:input aura:id="dateTo" label="Date To:" type="date" onchange="{!c.dateFilter}"/>
+            <div class="slds-border_right"></div>
+
+            <lightning:button class="addButton" label="Add Position" variant="brand" onclick="{!c.createRecord}"/>
+        </lightning:layout>
+
+        <div class="table">
+            <lightning:datatable data="{!v.filteredPositions}"
+                             keyField="id"
+                             columns="{!v.columns}"
+                             hideCheckboxColumn="true"
+                             sortedBy="Name"
+                             onrowaction="{!c.handleRowAction}"
+                             showRowNumberColumn="true"/>
+            <lightning:spinner aura:id="spinner" variant="brand" size="large"/>
+        </div>
+    </lightning:card>
+
+</aura:component>

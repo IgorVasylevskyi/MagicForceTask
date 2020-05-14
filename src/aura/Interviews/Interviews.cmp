@@ -1,0 +1,177 @@
+<aura:component description="Interviews" implements="flexipage:availableForAllPageTypes"
+                access="global" controller="InterviewsApexController">
+
+    <aura:attribute name="filteredInterviews" type="Interview__c[]"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="interview" type="Interview__c"/>
+    <aura:attribute name="englishPicklist" type="String[]" default="[]"/>
+
+    <aura:attribute name="isInterviewerModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="isTimeModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="isResultModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="interviewTime" type="dateTime"/>
+    <aura:attribute name="resultRadio" type="String"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="closeInterviewerModal" event="c:CloseInterviewerModalEvent"
+                  action="{!c.closeInterviewerModal}"/>
+    <aura:handler name="interviewerSelected" event="c:InterviewerSelectedEvent"
+                  action="{!c.interviewerSelected}"/>
+    <!--For refreshing tab-->
+    <aura:registerEvent name="refreshInterviews" type="c:refreshInterviewsEvent"/>
+    <aura:handler name="refreshInterviews" event="c:refreshInterviewsEvent" action="{!c.doInit}"/>
+    <!--<aura:handler event="c:refreshInterviewAppEvent" action="{!c.doInit}"/>-->
+
+
+    <lightning:card>
+
+        <lightning:layout class="slds-grid--align-space">
+
+            <span onkeypress="{!c.runCandidateFilter}" style="padding-bottom: 10px; padding-top: 5px">
+                <lightning:input aura:id="candidateName" label="" placeholder="Search by candidate..."
+                                 type="search" onchange="{!c.candidateNameIsEmpty}"/>
+            </span>
+
+            <span onkeypress="{!c.runPositionFilter}" style="padding-bottom: 10px; padding-top: 5px">
+                <lightning:input aura:id="positionName" label="" placeholder="Search by position..."
+                                 type="search" onchange="{!c.positionNameIsEmpty}"/>
+            </span>
+
+            <div class="slds-border_left"></div>
+
+            <lightning:input label="Date/time from:" aura:id="dateFrom" type="date" onchange="{!c.dateFilter}"/>
+            <lightning:input label="Date/time to:" aura:id="dateTo" type="date" onchange="{!c.dateFilter}"/>
+
+        </lightning:layout>
+
+        <div class="table">
+            <lightning:datatable data="{!v.filteredInterviews}"
+                                 keyField="id"
+                                 columns="{!v.columns}"
+                                 hideCheckboxColumn="true"
+                                 sortedBy="Name"
+                                 onrowaction="{!c.handleRowAction}"
+                                 showRowNumberColumn="true"/>
+            <lightning:spinner aura:id="spinner" variant="brand" size="large" alternativeText="Please wait"/>
+        </div>
+
+    </lightning:card>
+
+
+    <!--Display/hide "Set Time" modal-->
+    <aura:if isTrue="{!v.isTimeModalOpen}">
+
+        <!-- Modal Box-->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                 aria-modal="true" aria-describedby="modal-content-id-1"
+                 class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+                <!-- Modal Box Header-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeTimeModal }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Set Interview Time
+                    </h2>
+                </header>
+
+                <!--Modal Box Body-->
+                <lightning:layout class="time" horizontalAlign="center">
+                <lightning:input label="" type="datetime-local" aura:id="interviewTime"/>
+                </lightning:layout>
+
+                <!--Modal Box Footer-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeTimeModal }"/>
+                    <lightning:button variant="brand"
+                                      label="OK"
+                                      title="OK"
+                                      onclick="{! c.saveDateTime }"/>
+
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+
+    <!--Display/hide "Set Result" modal-->
+    <aura:if isTrue="{!v.isResultModalOpen}">
+
+        <!-- Modal Box-->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                 aria-modal="true" aria-describedby="modal-content-id-1"
+                 class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+                <!-- Modal Box Header-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeResultModal }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Set Interview Result
+                    </h2>
+                </header>
+
+                <!--Modal Box Body-->
+                <div style="background-color: white">
+                <lightning:layout horizontalAlign="center">
+
+
+                    <lightning:layoutItem size="2" class="passed">
+                        <lightning:input label="Passed" type="radio" value="Passed" onchange="{!c.getResult}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9" class="passed">
+                        <lightning:input label="Failed" type="radio" value="Failed" onchange="{!c.getResult}"/>
+                    </lightning:layoutItem>
+
+
+
+                </lightning:layout>
+                <lightning:layout>
+                    <div class="result">
+                        <lightning:combobox aura:id="english" label="English level:"
+                                            options="{!v.englishPicklist}"/>
+
+                    </div>
+                </lightning:layout>
+                    <div class="textarea">
+                    <lightning:textarea label="Technical skills" aura:id="hardSkills"/>
+                    <lightning:textarea label="Soft skills" aura:id="softSkills"/>
+                    </div>
+                </div>
+
+                <!--Modal Box Footer-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeResultModal }"/>
+                    <lightning:button variant="brand"
+                                      label="OK"
+                                      title="OK"
+                                      onclick="{! c.saveResult }"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <!--Display/hide "Set Interviewer" modal-->
+    <aura:if isTrue="{!v.isInterviewerModalOpen}">
+
+        <c:SetInterviewer interview="{!v.interview}"/>
+
+    </aura:if>
+
+</aura:component>

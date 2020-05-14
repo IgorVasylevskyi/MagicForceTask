@@ -1,0 +1,33 @@
+.THIS.card{
+    margin: 5px;
+}
+
+.THIS .slds-grid--align-space{
+    /*margin-top: auto;*/
+    margin-top: -20px;
+    padding-bottom: 30px;
+    margin-left: 15px;
+
+}
+.THIS .picklists{
+    display: inline-block;
+}
+.THIS span{
+
+}
+.THIS .date{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.THIS .addButton {
+    margin: 15px;
+}
+
+.THIS .table{
+    /******************/
+    /*height: 280px;*/
+    padding-left: 10px;
+    padding-right: 10px;
+
+    padding-bottom: 10px;
+}

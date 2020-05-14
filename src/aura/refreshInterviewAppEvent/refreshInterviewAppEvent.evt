@@ -1,0 +1,6 @@
+<!--
+ - Created by Igor on 23.03.2020.
+ -->
+
+<aura:event type="APPLICATION" description="refreshInterviewAppEvent">
+</aura:event>

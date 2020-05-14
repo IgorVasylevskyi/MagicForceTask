@@ -1,0 +1,6 @@
+.THIS.tabset {
+    /*position: absolute;*/
+    height: 100%;
+    /*height: calc(100vh - 190px);*/
+    margin-bottom: 5px;
+}

@@ -1,0 +1,56 @@
+<aura:component description="SetInterviewer" implements="flexipage:availableForAllPageTypes"
+                access="global" controller="SetInterviewerApexController">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="interview" type="Interview__c"/>
+    <aura:attribute name="data" type="Contact[]"/>
+    <aura:attribute name="columns" type="List"/>
+
+    <aura:registerEvent name="closeInterviewerModal" type="c:CloseInterviewerModalEvent"/>
+    <aura:registerEvent name="interviewerSelected" type="c:InterviewerSelectedEvent"/>
+
+
+    <!-- Modal Box-->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+             aria-modal="true" aria-describedby="modal-content-id-1"
+             class="slds-modal slds-fade-in-open">
+
+        <div class="slds-modal__container">
+            <!-- Modal Box Header-->
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close"
+                                      onclick="{! c.closeInterviewerModal }"
+                                      alternativeText="close"
+                                      variant="bare-inverse"
+                                      class="slds-modal__close"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                    Set Interviewers
+                </h2>
+            </header>
+
+            <!--Modal Box Body-->
+            <div style="max-height: 300px" class="slds-is-relative">
+                <lightning:datatable keyField="id"
+                                     columns="{!v.columns}"
+                                     data="{!v.data}"
+                                     showRowNumberColumn="true"
+                                     hideCheckboxColumn="true"
+                                     onrowaction="{!c.handleRowAction}"/>
+
+                <lightning:spinner aura:id="spinner" variant="brand" size="large" alternativeText="Please wait"/>
+            </div>
+
+            <!--Modal Box Footer-->
+            <footer class="slds-modal__footer">
+                <lightning:button variant="brand"
+                                  label="Cancel"
+                                  title="Cancel"
+                                  onclick="{! c.closeInterviewerModal }"/>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+
+
+</aura:component>

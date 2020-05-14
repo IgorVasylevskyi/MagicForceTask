@@ -1,0 +1,15 @@
+<aura:component description="RecruitingMain" implements="flexipage:availableForAllPageTypes,force:appHostable"
+                access="global">
+
+    <lightning:tabset class="tabset">
+        <lightning:tab label="Positions" id="Positions">
+            <c:Positions/>
+        </lightning:tab>
+        <lightning:tab label="Candidates" id="Candidates">
+            <c:Candidates/>
+        </lightning:tab>
+        <lightning:tab label="Interviews" id="Interviews">
+            <c:Interviews/>
+        </lightning:tab>
+    </lightning:tabset>
+</aura:component>

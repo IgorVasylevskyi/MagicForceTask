@@ -1,0 +1,99 @@
+<aura:component description="Candidates" implements="flexipage:availableForAllPageTypes" access="global"
+                controller="CandidatesApexController">
+
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="filteredCandidates" type="Candidate__c[]"/>
+    <aura:attribute name="englishPicklist" type="String[]" default="[]"/>
+    <aura:attribute name="qualificationPicklist" type="String[]" default="[]"/>
+
+    <aura:attribute name="candidate" type="Candidate__c"/>
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="positionSelected" event="c:PositionSelectedEvent" action="{!c.positionSelected}"/>
+    <!--For refreshing Tab-->
+    <aura:registerEvent name="refreshCandidates" type="c:refreshCandidatesEvent"/>
+    <aura:handler name="refreshCandidates" event="c:refreshCandidatesEvent" action="{!c.doInit}"/>
+
+    <lightning:card>
+
+        <lightning:layout class="slds-grid--align-space">
+
+            <span onkeypress="{!c.runNameFilter}" style="padding-bottom: 10px; padding-top: 5px">
+                <lightning:input aura:id="name" label="" placeholder="Search this list..."
+                                 type="search" onchange="{!c.nameIsEmpty}"/>
+            </span>
+
+            <div class="picklists">
+                <lightning:combobox aura:id="english" label="English level:"
+                                    options="{!v.englishPicklist}" onchange="{!c.allFilters}"/>
+
+            </div>
+            <div class="picklists">
+                <lightning:combobox aura:id="qualification" label="Qualification:"
+                                    options="{!v.qualificationPicklist}" onchange="{!c.allFilters}"/>
+
+            </div>
+
+            <div class="slds-border_left"></div>
+            <lightning:input aura:id="dateFrom" label="Date From:" type="date" onchange="{!c.dateFilter}"/>
+            <lightning:input aura:id="dateTo" label="Date To:" type="date" onchange="{!c.dateFilter}"/>
+            <div class="slds-border_right"></div>
+
+            <lightning:button class="addButton" label="Add Candidate" variant="brand" onclick="{!c.createRecord}"/>
+
+        </lightning:layout>
+
+        <div class="table">
+            <lightning:datatable data="{!v.filteredCandidates}"
+                                 keyField="id"
+                                 columns="{!v.columns}"
+                                 hideCheckboxColumn="true"
+                                 sortedBy="Name"
+                                 onrowaction="{!c.handleRowAction}"
+                                 showRowNumberColumn="true"/>
+            <lightning:spinner aura:id="spinner" variant="brand" size="large" alternativeText="Please wait"/>
+        </div>
+
+    </lightning:card>
+
+
+
+        <!--Display/hide modal-->
+        <aura:if isTrue="{!v.isModalOpen}">
+
+            <!-- Modal Box-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                     aria-modal="true" aria-describedby="modal-content-id-1"
+                     class="slds-modal slds-fade-in-open">
+
+                <div class="slds-modal__container">
+                    <!-- Modal Box Header-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModal }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                            Choose Position for matching
+                        </h2>
+                    </header>
+
+                    <!--Modal Box Body-->
+                    <c:MatchCandidateToPosition candidate="{!v.candidate}"/>
+
+                    <!--Modal Box Footer-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="brand"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModal }"/>
+
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+
+</aura:component>
